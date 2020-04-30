@@ -41,8 +41,8 @@ axios.interceptors.response.use(
           localStorage.removeItem('routes')
           localStorage.removeItem('user')
           localStorage.removeItem('menuData')
-          sessionStorage.removeItem('itemId')
-          sessionStorage.removeItem('costItemNumber')
+          localStorage.removeItem('menuData1')
+          localStorage.removeItem('menuData2')
           // 只有在当前路由不是登录页面才跳转
           router.currentRoute.path !== 'login' &&
           router.replace({

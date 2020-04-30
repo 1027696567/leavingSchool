@@ -1,5 +1,5 @@
 <template>
-<el-container style="height: 687px; border: 1px solid #eee">
+<el-container>
   <el-aside width="200px" style="background-color: rgb(238, 241, 246)">
     <el-menu router :default-active="$route.path" unique-opened>
       <el-submenu v-for="(child, index) in currentNavItems"  :key="index" :index="index+''">
@@ -17,17 +17,6 @@
   </el-container>
 </el-container>
 </template>
-<style>
-  .el-header {
-    background-color: #B3C0D1;
-    color: #333;
-    line-height: 60px;
-  }
-
-  .el-aside {
-    color: #333;
-  }
-</style>
 
 <script>
 export default {

@@ -52,8 +52,6 @@ export default {
                 localStorage.setItem('user', this.user.username)
                 localStorage.setItem('routes', JSON.stringify(res.data.routerData))
                 this.add_Routes(res.data.routerData) // 触发vuex里的增加路由
-                console.log(res.data.routerData)
-                this.$router.push('/menu1_item1')
               })
             } else if (res.status === 202) {
               this.$message.error('账号或密码错误')
@@ -65,7 +63,9 @@ export default {
           }).catch((err) => {
             this.$message.error(err)
             this.logining = false
-          })
+          }).finally(
+            this.logining = false
+          )
         } else {
           console.log('error submit!')
           return false

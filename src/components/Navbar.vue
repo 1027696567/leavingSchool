@@ -6,7 +6,7 @@
     <el-row>
       <el-col :span="12">
         <el-menu
-          :default-active="activeIndex2"
+          :default-active="$route.path"
           class="el-menu-demo"
           mode="horizontal"
           @select="handleSelect"
@@ -34,33 +34,58 @@
       </el-col>
 
       <el-col :span="12" style="text-align: right; font-size: 14px">
-        <el-dropdown>
-          <i class="el-icon-setting" style="margin-right: 15px"></i>
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>查看</el-dropdown-item>
-            <el-dropdown-item>新增</el-dropdown-item>
-            <el-dropdown-item>删除</el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
-        <span>王小虎</span>
+          <el-dropdown @command="handleCommand">
+            <span class="el-dropdown-link-one">
+              <i class="el-icon-user-solid"></i> {{ user }} <i class="el-icon-arrow-down el-icon--right"></i>
+            </span>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item command="a">修改密码</el-dropdown-item>
+              <el-dropdown-item command="b">基本信息</el-dropdown-item>
+              <el-dropdown-item command="c">退出系统</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
       </el-col>
     </el-row>
   </div>
 </template>
 <script>
 import Title from '../assets/title.png'
+import * as types from '../store/mutations_type'
 export default {
   data () {
     return {
-      activeIndex: '1',
-      activeIndex2: '1',
-      img: Title
+      img: Title,
+      user: ''
     }
   },
   methods: {
     handleSelect (key, keyPath) {
       console.log(key, keyPath)
+    },
+    handleCommand (command) {
+      switch (command) {
+        case 'a':
+          break
+        case 'b':
+          break
+        case 'c':
+          this.logout()
+          break
+      }
+    },
+    // 退出是清空sessionStorage信息
+    logout () {
+      this.$store.commit(types.LOGOUT)
+      localStorage.removeItem('routes')
+      localStorage.removeItem('user')
+      localStorage.removeItem('menuData')
+      localStorage.removeItem('menuData1')
+      localStorage.removeItem('menuData2')
+      this.$router.push('/login')
     }
+  },
+  created () {
+    this.user = localStorage.getItem('user')
   }
 }
 </script>

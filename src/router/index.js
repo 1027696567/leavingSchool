@@ -10,7 +10,8 @@ const router = new Router({
       name: 'login',
       component: login
     }
-  ]
+  ],
+  mode: 'history'
 })
 
 export default router
