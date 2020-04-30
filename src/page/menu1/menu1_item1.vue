@@ -6,8 +6,8 @@
           <p v-for="(operate,index) in navTo.operate" class="nav" @click="change(index)" :key="index" :index="index+''">
             <el-link :href=operate.path  target="_blank">
               <span class="urlTitle">{{operate.name}}</span>
-              <span class="urlTime">{{operate.time}}</span>
             </el-link>
+            <span class="urlTime">{{operate.time}}</span>
           </p>
       </el-tab-pane>
     </el-tabs>
@@ -19,7 +19,7 @@ export default {
     return {
       navTo: {
         'operate': [
-          {'name': '系统测试系统测试系统测试系统测试系统测试系统测试系统测试系统测试系统测试', 'path': '/header'},
+          {'name': '系统测试系统测试系统测试系统测试系统测试系统测试系统测试系统测试系统测试', 'path': '/header', 'time': '2020.4.30'},
           {'name': '系统2', 'path': '/HelloWorld/engine', 'time': '2020.4.30'},
           {'name': '系统3', 'path': '/HelloWorld/engine'},
           {'name': '系统5', 'path': '/HelloWorld/engine'}
@@ -30,6 +30,10 @@ export default {
 }
 </script>
 <style>
+  .News{
+    height: 435px;
+    min-width: 800px;
+  }
   .News .el-link{
     font-size: 15px;
     overflow: hidden;
@@ -37,6 +41,12 @@ export default {
     white-space: nowrap;
   }
   .News .urlTitle{
-    margin-right: 1150px;
+    float: left;
+  }
+  .News .urlTime{
+    float: right;
+    font-weight: 500;
+    font-size: 15px;
+    color: #606266;
   }
 </style>
