@@ -3,17 +3,27 @@
       <div class="topHead">
           <el-button icon="el-icon-plus" @click="addInfo">新增</el-button>
           <div class="search">
-            <label class="el-form-item__label">资讯标题</label>
-            <el-input v-model="input" placeholder="请输入咨询标题"></el-input>
-            <label class="el-form-item__label">上架状态</label>
-            <el-select v-model="value" placeholder="请选择">
-              <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" :disabled="item.disabled"></el-option>
-            </el-select>
-            <el-button type="primary" @click="addInfo">查询</el-button>
+              <div class="chunk">
+                  <label class="el-form-item__label">资讯标题</label>
+                  <el-input v-model="input" placeholder="请输入资讯标题"></el-input>
+              </div>
+              <div class="chunk">
+                  <label class="el-form-item__label">上架状态</label>
+                  <el-select v-model="value" placeholder="请选择">
+                      <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" :disabled="item.disabled"></el-option>
+                  </el-select>
+              </div>
+              <div class="chunk">
+                  <label class="el-form-item__label">审核状态</label>
+                  <el-select v-model="value" placeholder="请选择">
+                      <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" :disabled="item.disabled"></el-option>
+                  </el-select>
+              </div>
+              <el-button @click="handleBtnQuery(query)" type="primary">查询</el-button>
           </div>
       </div>
       <el-main>
-        <el-table :data="tableData">
+        <el-table :data="tableData.slice((currentPage-1)*pageSize,currentPage*pageSize)">
           <el-table-column prop="date" label="日期" width="140">
           </el-table-column>
           <el-table-column prop="name" label="姓名" width="120">
@@ -22,9 +32,21 @@
           </el-table-column>
         </el-table>
       </el-main>
+      <div class="block">
+        <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="currentPage"
+          :page-sizes="[15, 30, 50, 100]"
+          :page-size="pageSize"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="currentTotal">
+        </el-pagination>
+      </div>
   </div>
 </template>
 <script>
+import { findAllNews } from '../../api/menu2/api'
 export default {
   data () {
     const item = {
@@ -34,6 +56,9 @@ export default {
     }
     return {
       tableData: Array(20).fill(item),
+      currentPage: 1,
+      pageSize: 30,
+      currentTotal: 100,
       options: [{
         value: '选项1',
         label: '黄金糕'
@@ -53,6 +78,29 @@ export default {
       }],
       value: ''
     }
+  },
+  methods: {
+    handleBtnQuery (query) {
+      findAllNews(query).then(res => {
+        this.tableData = res.data
+        this.currentTotal = this.tableData.length
+        this.$message({
+          message: res.msg,
+          type: res.code === 200 ? 'success' : 'warning'
+        })
+      })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    handleSizeChange (val) {
+      this.pageSize = val
+      console.log(`每页 ${val} 条`)
+    },
+    handleCurrentChange (val) {
+      this.currentPage = val
+      console.log(`当前页: ${val}`)
+    }
   }
 }
 </script>
@@ -69,6 +117,12 @@ export default {
     overflow: hidden;
   }
   .topHead .el-button{
+    float: left;
+  }
+  .ReleaseNews .chunk{
+    float: left;
+  }
+  .topHead .el-option{
     float: left;
   }
   .topHead .search{
@@ -101,6 +155,9 @@ export default {
     width: 73px;
     height: 32px;
     margin-left: 20px;
+    float: right;
+  }
+  .el-pagination{
     float: right;
   }
 </style>
