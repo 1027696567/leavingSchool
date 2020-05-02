@@ -7,3 +7,10 @@ export function findAllNews (data) {
     data: data
   })
 }
+export function addInformation (data) {
+  return http({
+    url: '/contract/addInformation',
+    method: 'post',
+    data: data
+  })
+}

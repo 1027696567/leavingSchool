@@ -1,7 +1,7 @@
 <template>
   <div class="ReleaseNews">
       <div class="topHead">
-          <el-button icon="el-icon-plus" @click="addInfo">新增</el-button>
+          <el-button icon="el-icon-plus" @click="addInformation">新增</el-button>
           <div class="search">
               <div class="chunk">
                   <label class="el-form-item__label">资讯标题</label>
@@ -43,11 +43,14 @@
           :total="currentTotal">
         </el-pagination>
       </div>
+      <AddInformation v-if="addInformationVisible" ref="AddInformation"></AddInformation>
   </div>
 </template>
 <script>
 import { findAllNews } from '../../api/menu2/api'
+import AddInformation from '../../components/menu2/addInformation'
 export default {
+  components: { AddInformation },
   data () {
     const item = {
       date: '2016-05-02',
@@ -56,6 +59,7 @@ export default {
     }
     return {
       tableData: Array(20).fill(item),
+      addInformationVisible: false,
       currentPage: 1,
       pageSize: 30,
       currentTotal: 100,
@@ -92,6 +96,12 @@ export default {
         .catch(err => {
           console.log(err)
         })
+    },
+    addInformation () {
+      this.addInformationVisible = true
+      this.$nextTick(() => {
+        this.$refs.AddInformation.init()
+      })
     },
     handleSizeChange (val) {
       this.pageSize = val
