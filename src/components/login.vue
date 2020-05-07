@@ -42,32 +42,24 @@ export default {
         if (valid) {
           this.logining = true
           this.api.login(this.user.username, this.user.password).then((res) => {
-            if (res.status === 200) {
-              this.$store.commit(types.LOGIN, res.data)
-              this.api.getMenu().then((res) => {
-                this.logining = false
-                localStorage.setItem('menuData', JSON.stringify(res.data.navDatas1))
-                localStorage.setItem('menuData1', JSON.stringify(res.data.navDatas2))
-                localStorage.setItem('menuData2', JSON.stringify(res.data.navDatas3))
-                localStorage.setItem('user', this.user.username)
-                localStorage.setItem('routes', JSON.stringify(res.data.routerData))
-                this.add_Routes(res.data.routerData) // 触发vuex里的增加路由
-              })
-            } else if (res.status === 202) {
-              this.$message.error('账号或密码错误')
+            if (res.data.code === 200) {
+              this.$store.commit(types.LOGIN, res.data.data.token)
               this.logining = false
-            } else if (res.status === 203) {
-              this.$message.error('账号已被锁定,请联系管理员!')
+              localStorage.setItem('menuData', JSON.stringify(res.data.data.menu.navDatas1))
+              localStorage.setItem('menuData1', JSON.stringify(res.data.data.menu.navDatas2))
+              localStorage.setItem('menuData2', JSON.stringify(res.data.data.menu.navDatas3))
+              localStorage.setItem('user', this.user.username)
+              localStorage.setItem('routes', JSON.stringify(res.data.data.menu.routerData))
+              this.add_Routes(res.data.data.menu.routerData) // 触发vuex里的增加路由
+              this.$router.push('/menu1_item1')
+            } else {
               this.logining = false
             }
           }).catch((err) => {
             this.$message.error(err)
             this.logining = false
-          }).finally(
-            this.logining = false
-          )
+          })
         } else {
-          console.log('error submit!')
           return false
         }
       })

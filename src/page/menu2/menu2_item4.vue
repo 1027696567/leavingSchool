@@ -5,18 +5,18 @@
           <div class="search">
               <div class="chunk">
                   <label class="el-form-item__label">资讯标题</label>
-                  <el-input v-model="input" placeholder="请输入资讯标题"></el-input>
+                  <el-input v-model="title" placeholder="请输入资讯标题"></el-input>
               </div>
               <div class="chunk">
                   <label class="el-form-item__label">上架状态</label>
-                  <el-select v-model="value" placeholder="请选择">
-                      <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" :disabled="item.disabled"></el-option>
+                  <el-select v-model="status" placeholder="请选择">
+                      <el-option v-for="item in statusOptions" :key="item.value" :label="item.label" :value="item.value" :disabled="item.disabled"></el-option>
                   </el-select>
               </div>
               <div class="chunk">
                   <label class="el-form-item__label">审核状态</label>
-                  <el-select v-model="value" placeholder="请选择">
-                      <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" :disabled="item.disabled"></el-option>
+                  <el-select v-model="auditStatus" placeholder="请选择">
+                      <el-option v-for="item in auditStatusOptions" :key="item.value" :label="item.label" :value="item.value" :disabled="item.disabled"></el-option>
                   </el-select>
               </div>
               <el-button @click="handleBtnQuery(query)" type="primary">查询</el-button>
@@ -24,11 +24,17 @@
       </div>
       <el-main>
         <el-table :data="tableData.slice((currentPage-1)*pageSize,currentPage*pageSize)">
-          <el-table-column prop="date" label="日期" width="140">
+          <el-table-column prop="id" label="ID" width="140">
           </el-table-column>
-          <el-table-column prop="name" label="姓名" width="120">
+          <el-table-column prop="auditStatusName" label="审核状态" width="120">
           </el-table-column>
-          <el-table-column prop="address" label="地址">
+          <el-table-column prop="statusName" label="上架状态">
+          </el-table-column>
+          <el-table-column prop="title" label="标题">
+          </el-table-column>
+          <el-table-column prop="name" label="发布部门">
+          </el-table-column>
+          <el-table-column prop="" label="操作">
           </el-table-column>
         </el-table>
       </el-main>
@@ -47,46 +53,50 @@
   </div>
 </template>
 <script>
-import { findAllNews } from '../../api/menu2/api'
+import { findAllInformation } from '../../api/menu2/api'
 import AddInformation from '../../components/menu2/addInformation'
 export default {
   components: { AddInformation },
   data () {
-    const item = {
-      date: '2016-05-02',
-      name: '王小虎',
-      address: '上海市普陀区金沙江路 1518 弄'
-    }
     return {
-      tableData: Array(20).fill(item),
+      tableData: [],
       addInformationVisible: false,
       currentPage: 1,
       pageSize: 30,
       currentTotal: 100,
-      options: [{
-        value: '选项1',
-        label: '黄金糕'
+      status: '',
+      auditStatus: '',
+      title: '',
+      statusOptions: [{
+        value: '',
+        label: '全部'
       }, {
-        value: '选项2',
-        label: '双皮奶',
-        disabled: true
+        value: 1,
+        label: '已上架'
       }, {
-        value: '选项3',
-        label: '蚵仔煎'
-      }, {
-        value: '选项4',
-        label: '龙须面'
-      }, {
-        value: '选项5',
-        label: '北京烤鸭'
+        value: -1,
+        label: '未上架'
       }],
-      value: ''
+      auditStatusOptions: [{
+        value: '',
+        label: '全部'
+      }, {
+        value: 0,
+        label: '待审核'
+      }, {
+        value: 1,
+        label: '审核通过'
+      }, {
+        value: -1,
+        label: '审核不通过'
+      }]
     }
   },
   methods: {
     handleBtnQuery (query) {
-      findAllNews(query).then(res => {
-        this.tableData = res.data
+      console.log(query)
+      findAllInformation(query).then(res => {
+        this.tableData = res.data.data
         this.currentTotal = this.tableData.length
         this.$message({
           message: res.msg,
@@ -96,6 +106,14 @@ export default {
         .catch(err => {
           console.log(err)
         })
+    },
+    findAllInformation () {
+      findAllInformation().then(res => {
+        this.tableData = res.data.data
+        this.currentTotal = this.tableData.length
+      }).catch(err => {
+        console.log(err)
+      })
     },
     addInformation () {
       this.addInformationVisible = true
@@ -111,6 +129,9 @@ export default {
       this.currentPage = val
       console.log(`当前页: ${val}`)
     }
+  },
+  created () {
+    this.findAllInformation()
   }
 }
 </script>

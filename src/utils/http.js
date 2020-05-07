@@ -23,34 +23,32 @@ axios.interceptors.request.use(
 // http response 拦截器
 axios.interceptors.response.use(
   response => {
-    if (response.status === 203) {
-      console.log('权限不足')
+    switch (response.data.code) {
+      case 200:
+        ElementUI.Message.success(response.data.msg)
+        break
+      case 20001:
+        ElementUI.Message.error(response.data.msg)
+        Store.commit(types.LOGOUT)
+        localStorage.removeItem('routes')
+        localStorage.removeItem('user')
+        localStorage.removeItem('menuData')
+        localStorage.removeItem('menuData1')
+        localStorage.removeItem('menuData2')
+        // 只有在当前路由不是登录页面才跳转
+        router.currentRoute.path !== 'login' &&
+        router.replace({
+          path: 'login',
+          query: { redirect: router.currentRoute.path }
+        })
+        break
+      default:
+        ElementUI.Message.error(response.data.msg)
     }
     return response
   },
   error => {
     if (error.response) {
-      switch (error.response.status) {
-        case 401:
-          ElementUI.Message.error(error.response.data)
-          break
-        case 402:
-          // 401 清除token信息并跳转到登录页面
-          ElementUI.Message.error(error.response.data)
-          Store.commit(types.LOGOUT)
-          localStorage.removeItem('routes')
-          localStorage.removeItem('user')
-          localStorage.removeItem('menuData')
-          localStorage.removeItem('menuData1')
-          localStorage.removeItem('menuData2')
-          // 只有在当前路由不是登录页面才跳转
-          router.currentRoute.path !== 'login' &&
-          router.replace({
-            path: 'login',
-            query: { redirect: router.currentRoute.path }
-          })
-          break
-      }
     }
     // console.log(JSON.stringify(error));//console : Error: Request failed with status code 402
     return Promise.reject(error)
