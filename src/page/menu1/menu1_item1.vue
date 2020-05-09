@@ -19,6 +19,18 @@
           <span class="urlTime">{{data.updateTime}}</span>
         </p>
     </el-card>
+    <el-card class="box-card2" :body-style="{ padding: '0 20px 0 20px' }">
+      <div slot="header" class="clearfix">
+        <span><i class="el-icon-date"></i> 办事指南</span>
+        <el-button style="float: right; padding: 3px 0" type="text">查看更多</el-button>
+      </div>
+        <p v-for="(data,index) in Information" class="nav" :key="index" :index="index+''">
+          <el-link :href=href+data.id  target="_blank">
+            <span class="urlTitle">{{data.title}}</span>
+          </el-link>
+          <span class="urlTime">{{data.updateTime}}</span>
+        </p>
+    </el-card>
   </div>
 </template>
 <script>
@@ -74,9 +86,12 @@ export default {
   }
 
   .News .box-card {
-    padding: 10px 0 0 0;
-    width: 60%;
+    width: 59%;
     float: left;
+  }
+  .News .box-card2 {
+    width: 40.5%;
+    float: right;
   }
   .News .el-carousel__item h3 {
     color: #475669;
@@ -94,6 +109,6 @@ export default {
      background-color: #d3dce6;
   }
   .News .block{
-    padding: 0px;
+    padding-bottom: 10px;
   }
 </style>

@@ -2,7 +2,13 @@
   <div class="InformationInfo">
     <el-container>
       <el-main>
-        <p>Hello</p>
+        <el-card class="box-card" :body-style="{ padding: '0 20px 0 20px' }">
+          <div slot="header" class="clearfix">
+            <span><i class="el-icon-date"></i> 新闻公告</span>
+          </div>
+          <el-divider>饿了别叫妈, 叫饿了么</el-divider>
+          <el-divider><i class="el-icon-mobile-phone"></i></el-divider>
+        </el-card>
       </el-main>
     </el-container>
   </div>
@@ -32,5 +38,9 @@ export default {
 }
 </script>
 <style>
-
+  .InformationInfo .box-card {
+    padding: 10px 0 0 0;
+    width: 100%;
+    float: left;
+  }
 </style>
