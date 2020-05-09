@@ -19,20 +19,20 @@
                       <el-option v-for="item in auditStatusOptions" :key="item.value" :label="item.label" :value="item.value" :disabled="item.disabled"></el-option>
                   </el-select>
               </div>
-              <el-button @click="handleBtnQuery(query)" type="primary">查询</el-button>
+              <el-button @click="handleBtnQuery" type="primary">查询</el-button>
           </div>
       </div>
       <el-main>
         <el-table :data="tableData.slice((currentPage-1)*pageSize,currentPage*pageSize)">
-          <el-table-column prop="id" label="ID" width="140">
+          <el-table-column prop="id" label="ID" width="50">
           </el-table-column>
           <el-table-column prop="auditStatusName" label="审核状态" width="120">
           </el-table-column>
-          <el-table-column prop="statusName" label="上架状态">
+          <el-table-column prop="statusName" label="上架状态" width="120">
           </el-table-column>
-          <el-table-column prop="title" label="标题">
+          <el-table-column prop="title" label="标题" width="350">
           </el-table-column>
-          <el-table-column prop="name" label="发布部门">
+          <el-table-column prop="name" label="发布部门" width="200">
           </el-table-column>
           <el-table-column prop="" label="操作">
           </el-table-column>
@@ -53,7 +53,7 @@
   </div>
 </template>
 <script>
-import { findAllInformation } from '../../api/menu2/api'
+import { findAllInformation, findPartInformation } from '../../api/menu2/api'
 import AddInformation from '../../components/menu2/addInformation'
 export default {
   components: { AddInformation },
@@ -64,11 +64,11 @@ export default {
       currentPage: 1,
       pageSize: 30,
       currentTotal: 100,
-      status: '',
-      auditStatus: '',
+      status: 2,
+      auditStatus: 2,
       title: '',
       statusOptions: [{
-        value: '',
+        value: 2,
         label: '全部'
       }, {
         value: 1,
@@ -78,7 +78,7 @@ export default {
         label: '未上架'
       }],
       auditStatusOptions: [{
-        value: '',
+        value: 2,
         label: '全部'
       }, {
         value: 0,
@@ -93,19 +93,13 @@ export default {
     }
   },
   methods: {
-    handleBtnQuery (query) {
-      console.log(query)
-      findAllInformation(query).then(res => {
+    handleBtnQuery () {
+      findPartInformation({title: this.title, status: this.status, auditStatus: this.auditStatus}).then(res => {
         this.tableData = res.data.data
         this.currentTotal = this.tableData.length
-        this.$message({
-          message: res.msg,
-          type: res.code === 200 ? 'success' : 'warning'
-        })
+      }).catch(err => {
+        console.log(err)
       })
-        .catch(err => {
-          console.log(err)
-        })
     },
     findAllInformation () {
       findAllInformation().then(res => {

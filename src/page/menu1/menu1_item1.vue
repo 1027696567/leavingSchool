@@ -1,37 +1,52 @@
 <template>
   <div class="News">
-    <el-tabs type="border-card">
-      <el-tab-pane>
-        <span slot="label"><i class="el-icon-date"></i> 新闻公告</span>
-          <p v-for="(operate,index) in navTo.operate" class="nav" @click="change(index)" :key="index" :index="index+''">
-            <el-link :href=operate.path  target="_blank">
-              <span class="urlTitle">{{operate.name}}</span>
-            </el-link>
-            <span class="urlTime">{{operate.time}}</span>
-          </p>
-      </el-tab-pane>
-    </el-tabs>
+    <div class="block">
+      <el-carousel height="250px">
+        <el-carousel-item v-for="item in 4" :key="item">
+          <h3 class="small">{{ item }}</h3>
+        </el-carousel-item>
+      </el-carousel>
+    </div>
+    <el-card class="box-card" :body-style="{ padding: '0 20px 0 20px' }">
+      <div slot="header" class="clearfix">
+        <span><i class="el-icon-date"></i> 新闻公告</span>
+        <el-button style="float: right; padding: 3px 0" type="text">查看更多</el-button>
+      </div>
+        <p v-for="(data,index) in Information" class="nav" :key="index" :index="index+''">
+          <el-link :href=href+data.id  target="_blank">
+            <span class="urlTitle">{{data.title}}</span>
+          </el-link>
+          <span class="urlTime">{{data.updateTime}}</span>
+        </p>
+    </el-card>
   </div>
 </template>
 <script>
+import { findPartInformation } from '../../api/menu2/api'
 export default {
   data () {
     return {
-      navTo: {
-        'operate': [
-          {'name': '系统测试系统测试系统测试系统测试系统测试系统测试系统测试系统测试系统测试', 'path': '/header', 'time': '2020.4.30'},
-          {'name': '系统2', 'path': '/HelloWorld/engine', 'time': '2020.4.30'},
-          {'name': '系统3', 'path': '/HelloWorld/engine'},
-          {'name': '系统5', 'path': '/HelloWorld/engine'}
-        ]
-      }
+      Information: null,
+      href: '/InformationInfo' + '?id=',
+      value: new Date()
     }
+  },
+  methods: {
+    findPartInformation () {
+      findPartInformation({title: '', status: 1, auditStatus: 1}).then(res => {
+        this.Information = res.data.data.slice(0, 4)
+      }).catch(err => {
+        console.log(err)
+      })
+    }
+  },
+  created () {
+    this.findPartInformation()
   }
 }
 </script>
 <style>
   .News{
-    height: 435px;
     min-width: 800px;
   }
   .News .el-link{
@@ -48,5 +63,37 @@ export default {
     font-weight: 500;
     font-size: 15px;
     color: #606266;
+  }
+  .News .clearfix:before,
+  .News .clearfix:after {
+    display: table;
+    content: "";
+  }
+  .News .clearfix:after {
+    clear: both
+  }
+
+  .News .box-card {
+    padding: 10px 0 0 0;
+    width: 60%;
+    float: left;
+  }
+  .News .el-carousel__item h3 {
+    color: #475669;
+    font-size: 14px;
+    opacity: 0.75;
+    line-height: 150px;
+    margin: 0;
+  }
+
+  .News .el-carousel__item:nth-child(2n) {
+     background-color: #99a9bf;
+  }
+
+  .News .el-carousel__item:nth-child(2n+1) {
+     background-color: #d3dce6;
+  }
+  .News .block{
+    padding: 0px;
   }
 </style>

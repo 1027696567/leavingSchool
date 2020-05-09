@@ -14,3 +14,11 @@ export function findAllInformation () {
     method: 'get'
   })
 }
+
+export function findPartInformation (data) {
+  return http({
+    url: '/sys/partInformation',
+    method: 'get',
+    params: data
+  })
+}

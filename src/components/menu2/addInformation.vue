@@ -67,7 +67,7 @@ export default {
       })
     },
     parent () {
-      this.$parent.selectAllCompanyInfo()
+      this.$parent.findAllInformation()
     },
     resetForm (form) {
       this.$refs[form].resetFields()
