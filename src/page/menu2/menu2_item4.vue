@@ -34,7 +34,15 @@
           </el-table-column>
           <el-table-column prop="name" label="发布部门" width="200">
           </el-table-column>
-          <el-table-column prop="" label="操作">
+          <el-table-column label="操作">
+            <template slot-scope="scope">
+              <el-button @click="auditInformation(scope.row)" type="text" v-if="scope.row.auditStatus !== 1?true:false" size="small">审核</el-button>
+              <el-button @click="handleClick(scope.row)" type="text" v-if="scope.row.auditStatus === -1?true:false" size="small">查看原因</el-button>
+              <el-button type="text" size="small" v-if="scope.row.auditStatus === 0?true:false">编辑</el-button>
+              <el-button type="text" size="small" v-if="scope.row.auditStatus === -1?true:false">重新编辑</el-button>
+              <el-button type="text" size="small" v-if="scope.row.auditStatus === 1&scope.row.status === -1?true:false">上架</el-button>
+              <el-button type="text" size="small" v-if="scope.row.auditStatus === 1&scope.row.status === 1?true:false">下架</el-button>
+            </template>
           </el-table-column>
         </el-table>
       </el-main>
@@ -50,17 +58,20 @@
         </el-pagination>
       </div>
       <AddInformation v-if="addInformationVisible" ref="AddInformation"></AddInformation>
+      <AuditInformation v-if="auditInformationVisible" ref="auditInformation"></AuditInformation>
   </div>
 </template>
 <script>
 import { findAllInformation, findPartInformation } from '../../api/menu2/api'
 import AddInformation from '../../components/menu2/addInformation'
+import AuditInformation from '../../components/menu2/auditInformation'
 export default {
-  components: { AddInformation },
+  components: { AddInformation, AuditInformation },
   data () {
     return {
       tableData: [],
       addInformationVisible: false,
+      auditInformationVisible: false,
       currentPage: 1,
       pageSize: 30,
       currentTotal: 100,
@@ -114,6 +125,15 @@ export default {
       this.$nextTick(() => {
         this.$refs.AddInformation.init()
       })
+    },
+    auditInformation (row) {
+      this.auditInformationVisible = true
+      this.$nextTick(() => {
+        this.$refs.AuditInformation.init()
+      })
+    },
+    handleClick (row) {
+      console.log(row)
     },
     handleSizeChange (val) {
       this.pageSize = val

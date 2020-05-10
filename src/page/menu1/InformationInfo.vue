@@ -4,43 +4,55 @@
       <el-main>
         <el-card class="box-card" :body-style="{ padding: '0 20px 0 20px' }">
           <div slot="header" class="clearfix">
-            <span><i class="el-icon-date"></i> 新闻公告</span>
+            <span><i class="el-icon-document"></i> 公告详情</span>
           </div>
-          <el-divider>饿了别叫妈, 叫饿了么</el-divider>
-          <el-divider><i class="el-icon-mobile-phone"></i></el-divider>
+          <div class="body">
+            <h4 class="title">{{this.information.title}}</h4>
+            <el-divider>作者：{{this.information.createUser}} — 发布时间：{{this.information.updateTime}} — 发布部门：{{this.information.name}}</el-divider>
+            <p style="line-height: 2em; text-indent: 2em;">
+              <span style="font-family: 微软雅黑,Microsoft YaHei;">{{this.information.content}}</span>
+            </p>
+          </div>
         </el-card>
       </el-main>
     </el-container>
   </div>
 </template>
 <script>
-import { findAllInformation } from '../../api/menu2/api'
+import { findInformation } from '../../api/menu2/api'
 export default {
   data () {
     return {
-      Information: null,
-      href: '/InformationInfo' + '?id='
+      href: '/InformationInfo' + '?id=',
+      information: ''
     }
   },
   methods: {
-    findAllInformation () {
-      findAllInformation().then(res => {
-        console.log(res.data)
-        this.Information = res.data.data
+    findInformation () {
+      findInformation({id: this.$route.query.id}).then(res => {
+        console.log(res.data.data)
+        this.information = res.data.data
       }).catch(err => {
         console.log(err)
       })
     }
   },
   created () {
-    console.log(this.$route.query.id)
+    this.findInformation()
   }
 }
 </script>
 <style>
   .InformationInfo .box-card {
-    padding: 10px 0 0 0;
     width: 100%;
-    float: left;
+  }
+  .InformationInfo .body{
+    font-family: "微软雅黑";
+  }
+  .InformationInfo .title{
+    text-align: center;
+    font-weight: normal;
+    font-size: 26px;
+    list-style: none outside none;
   }
 </style>

@@ -9,7 +9,7 @@
     </div>
     <el-card class="box-card" :body-style="{ padding: '0 20px 0 20px' }">
       <div slot="header" class="clearfix">
-        <span><i class="el-icon-date"></i> 新闻公告</span>
+        <span><i class="el-icon-tickets"></i> 新闻公告</span>
         <el-button style="float: right; padding: 3px 0" type="text">查看更多</el-button>
       </div>
         <p v-for="(data,index) in Information" class="nav" :key="index" :index="index+''">
@@ -21,7 +21,7 @@
     </el-card>
     <el-card class="box-card2" :body-style="{ padding: '0 20px 0 20px' }">
       <div slot="header" class="clearfix">
-        <span><i class="el-icon-date"></i> 办事指南</span>
+        <span><i class="el-icon-s-promotion"></i> 办事指南</span>
         <el-button style="float: right; padding: 3px 0" type="text">查看更多</el-button>
       </div>
         <p v-for="(data,index) in Information" class="nav" :key="index" :index="index+''">

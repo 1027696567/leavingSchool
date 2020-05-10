@@ -10,7 +10,7 @@ export function addInformation (data) {
 
 export function findAllInformation () {
   return http({
-    url: '/sys/information',
+    url: '/sys/informations',
     method: 'get'
   })
 }
@@ -18,6 +18,14 @@ export function findAllInformation () {
 export function findPartInformation (data) {
   return http({
     url: '/sys/partInformation',
+    method: 'get',
+    params: data
+  })
+}
+
+export function findInformation (data) {
+  return http({
+    url: '/sys/information',
     method: 'get',
     params: data
   })
