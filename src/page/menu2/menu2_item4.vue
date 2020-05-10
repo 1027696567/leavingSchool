@@ -58,7 +58,7 @@
         </el-pagination>
       </div>
       <AddInformation v-if="addInformationVisible" ref="AddInformation"></AddInformation>
-      <AuditInformation v-if="auditInformationVisible" ref="auditInformation"></AuditInformation>
+      <AuditInformation v-if="auditInformationVisible" ref="AuditInformation"></AuditInformation>
   </div>
 </template>
 <script>
@@ -129,7 +129,7 @@ export default {
     auditInformation (row) {
       this.auditInformationVisible = true
       this.$nextTick(() => {
-        this.$refs.AuditInformation.init()
+        this.$refs.AuditInformation.init(row)
       })
     },
     handleClick (row) {

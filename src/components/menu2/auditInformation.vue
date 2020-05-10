@@ -5,12 +5,19 @@
       <el-form label-position="right" :rules="rules" ref="form" :model="form" label-width="80px">
         <el-row>
           <el-col :span="24">
-            <el-form-item label="资讯标题：" prop="title" style="width:640px">
-              <el-input v-model="form.title" placeholder="请输入资讯标题"></el-input>
+            <el-form-item label="审核结果：" prop="title" style="width:640px">
+              <el-select v-model="form.auditStatus">
+                <el-option
+                  v-for="item in options"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
             </el-form-item>
           </el-col>
         </el-row>
-        <el-form-item label="资讯内容：" prop="content" style="width:640px">
+        <el-form-item label="审核内容：" prop="content" style="width:640px" v-if="this.form.auditStatus===1?true:false">
           <el-input type="textarea"
             :autosize="{ minRows: 6 }"
             resize=vertical
@@ -34,22 +41,28 @@ export default {
     return {
       dialogVisible: false,
       form: {
-        title: '',
+        id: null,
         content: '',
-        createUser: ''
+        createUser: '',
+        auditStatus: 1
       },
+      options: [{
+        value: 1,
+        label: '审核通过'
+      }, {
+        value: -1,
+        label: '审核不通过'
+      }],
       rules: {
-        title: [
-          {required: true, message: '请输入资讯标题', trigger: 'blur'}
-        ],
         content: [
-          {required: true, message: '请输入资讯内容', trigger: 'blur'}
+          {required: true, message: '请输入审核内容', trigger: 'blur'}
         ]
       }
     }
   },
   methods: {
-    init () {
+    init (row) {
+      this.form.id = row.id
       this.dialogVisible = true
     },
     onSubmit (form) {
