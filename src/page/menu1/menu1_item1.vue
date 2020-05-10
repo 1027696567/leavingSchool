@@ -87,9 +87,11 @@ export default {
 
   .News .box-card {
     width: 59%;
+    min-height: 200px;
     float: left;
   }
   .News .box-card2 {
+    min-height: 200px;
     width: 40.5%;
     float: right;
   }
