@@ -15,7 +15,7 @@
             :autosize="{ minRows: 6 }"
             resize=vertical
             v-model="form.content"
-            maxlength="1000"
+            maxlength="2000"
             show-word-limit>
           </el-input>
         </el-form-item>

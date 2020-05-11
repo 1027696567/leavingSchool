@@ -1,5 +1,5 @@
 <template>
-  <div class="ReleaseNews">
+  <div class="secondCollegeDept">
       <div class="topHead">
           <el-button icon="el-icon-plus" @click="addInformation">新增</el-button>
           <div class="search">
@@ -22,7 +22,7 @@
               <el-button @click="handleBtnQuery" type="primary">查询</el-button>
           </div>
       </div>
-      <div class="table">
+      <el-main>
         <el-table :data="tableData.slice((currentPage-1)*pageSize,currentPage*pageSize)">
           <el-table-column prop="id" label="ID" width="50">
           </el-table-column>
@@ -45,7 +45,7 @@
             </template>
           </el-table-column>
         </el-table>
-      </div>
+      </el-main>
       <div class="block">
         <el-pagination
           @size-change="handleSizeChange"
@@ -168,10 +168,10 @@ export default {
 }
 </script>
 <style>
-  .ReleaseNews .topHead{
+  .secondCollegeDept .topHead{
     width:100%;
     height:32px;
-    padding:0;
+    padding:0 10px 0 10px;
     box-sizing: border-box;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
@@ -179,19 +179,19 @@ export default {
     -ms-box-sizing: border-box;
     overflow: hidden;
   }
-  .ReleaseNews .topHead .el-button{
+  .secondCollegeDept .topHead .el-button{
     float: left;
   }
-  .ReleaseNews .chunk{
+  .secondCollegeDept .chunk{
     float: left;
   }
-  .ReleaseNews .topHead .el-option{
+  .secondCollegeDept .topHead .el-option{
     float: left;
   }
-  .ReleaseNews .topHead .search{
+  .secondCollegeDept .topHead .search{
     float: right;
   }
-  .ReleaseNews .topHead .el-form-item__label{
+  .secondCollegeDept .topHead .el-form-item__label{
     float: left;
     width: 85px;
     height: 32px;
@@ -199,7 +199,7 @@ export default {
     padding: 0;
     line-height: 2.3;
   }
-  .ReleaseNews .topHead .el-input{
+  .secondCollegeDept .topHead .el-input{
     -webkit-appearance: none;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
@@ -214,16 +214,13 @@ export default {
     width: 150px;
     float: left;
   }
-  .ReleaseNews .topHead .search .el-button{
+  .secondCollegeDept .topHead .search .el-button{
     width: 73px;
     height: 32px;
     margin-left: 20px;
     float: right;
   }
-  .ReleaseNews .el-pagination{
+  .secondCollegeDept .el-pagination{
     float: right;
-  }
-  .ReleaseNews .table{
-    padding: 20px 0;
   }
 </style>
