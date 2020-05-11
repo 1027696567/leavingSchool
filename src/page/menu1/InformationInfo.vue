@@ -45,6 +45,7 @@ export default {
 <style>
   .InformationInfo .box-card {
     width: 100%;
+    min-height: 580px;
   }
   .InformationInfo .body{
     font-family: "微软雅黑";

@@ -1,5 +1,5 @@
 <template>
-  <div class="addInformation">
+  <div class="editInformation">
     <!-- 添加资讯信息弹框 -->
     <el-dialog title="新增资讯" :visible.sync="dialogVisible" width="700px" :before-close="closeDiv">
       <el-form label-position="right" :rules="rules" ref="form" :model="form" label-width="80px">
@@ -20,7 +20,7 @@
           </el-input>
         </el-form-item>
         <el-form-item style="margin:20px 0 0 180px">
-          <el-button type="primary" @click="onSubmit('form')">确认</el-button>
+          <el-button type="primary" @click="updateForm('form')">确认</el-button>
           <el-button @click="resetForm('form')">取消</el-button>
         </el-form-item>
       </el-form>
@@ -28,7 +28,7 @@
   </div>
 </template>
 <script>
-import { addInformation } from '../../api/menu2/api'
+import { updateInformation } from '../../api/menu2/api'
 export default {
   data () {
     return {
@@ -49,15 +49,15 @@ export default {
     }
   },
   methods: {
-    init () {
+    init (data) {
+      this.form = data
       this.dialogVisible = true
     },
-    onSubmit (form) {
+    updateForm (form) {
       this.$refs[form].validate(async (valid) => {
         if (valid) {
-          this.form.createUser = localStorage.getItem('user')
-          await addInformation(this.form).then((res) => {
-            this.$refs[form].resetFields()
+          this.form.updateUser = localStorage.getItem('user')
+          await updateInformation(this.form).then((res) => {
             this.dialogVisible = false
             this.parent()
           })
@@ -70,27 +70,24 @@ export default {
       this.$parent.findAllInformation()
     },
     resetForm (form) {
-      this.$refs[form].resetFields()
       this.dialogVisible = false
     },
     closeDiv (done) {
-      this.$refs['form'].resetFields()
       done()
     }
   },
   created () {
-
   }
 }
 </script>
 <style>
-.addInformation .el-form-item__label {
+.editInformation .el-form-item__label {
   width: 95px!important;
   padding: 0 5px 0 5px!important;
   webkit-box-sizing: border-box;
   box-sizing: border-box;
 }
-.addInformation .el-form-item__content {
+.editInformation .el-form-item__content {
   margin-left: 95px!important;
 }
 </style>

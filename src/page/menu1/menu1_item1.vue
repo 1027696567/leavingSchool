@@ -10,7 +10,7 @@
     <el-card class="box-card" :body-style="{ padding: '0 20px 0 20px' }">
       <div slot="header" class="clearfix">
         <span><i class="el-icon-tickets"></i> 新闻公告</span>
-        <el-button style="float: right; padding: 3px 0" type="text">查看更多</el-button>
+        <el-button @click="findAllInformation" style="float: right; padding: 3px 0" type="text">查看更多</el-button>
       </div>
         <p v-for="(data,index) in Information" class="nav" :key="index" :index="index+''">
           <el-link :href=href+data.id  target="_blank">
@@ -39,8 +39,7 @@ export default {
   data () {
     return {
       Information: null,
-      href: '/InformationInfo' + '?id=',
-      value: new Date()
+      href: '/InformationInfo' + '?id='
     }
   },
   methods: {
@@ -50,6 +49,9 @@ export default {
       }).catch(err => {
         console.log(err)
       })
+    },
+    findAllInformation () {
+      window.open('/informationList')
     }
   },
   created () {

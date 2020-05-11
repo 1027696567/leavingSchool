@@ -17,7 +17,7 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-form-item label="审核内容：" prop="content" style="width:640px" v-if="this.form.auditStatus===1?true:false">
+        <el-form-item label="审核内容：" prop="content" style="width:640px" v-if="this.form.auditStatus===-1?true:false">
           <el-input type="textarea"
             :autosize="{ minRows: 6 }"
             resize=vertical
@@ -35,15 +35,15 @@
   </div>
 </template>
 <script>
-import { addInformation } from '../../api/menu2/api'
+import { auditInformation } from '../../api/menu2/api'
 export default {
   data () {
     return {
       dialogVisible: false,
       form: {
-        id: null,
+        informationId: null,
         content: '',
-        createUser: '',
+        createUser: null,
         auditStatus: 1
       },
       options: [{
@@ -62,14 +62,14 @@ export default {
   },
   methods: {
     init (row) {
-      this.form.id = row.id
+      this.form.informationId = row.id
       this.dialogVisible = true
     },
     onSubmit (form) {
       this.$refs[form].validate(async (valid) => {
         if (valid) {
           this.form.createUser = localStorage.getItem('user')
-          await addInformation(this.form).then((res) => {
+          await auditInformation(this.form).then((res) => {
             this.$refs[form].resetFields()
             this.dialogVisible = false
             this.parent()

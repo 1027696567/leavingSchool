@@ -36,12 +36,12 @@
           </el-table-column>
           <el-table-column label="操作">
             <template slot-scope="scope">
-              <el-button @click="auditInformation(scope.row)" type="text" v-if="scope.row.auditStatus !== 1?true:false" size="small">审核</el-button>
-              <el-button @click="handleClick(scope.row)" type="text" v-if="scope.row.auditStatus === -1?true:false" size="small">查看原因</el-button>
-              <el-button type="text" size="small" v-if="scope.row.auditStatus === 0?true:false">编辑</el-button>
-              <el-button type="text" size="small" v-if="scope.row.auditStatus === -1?true:false">重新编辑</el-button>
-              <el-button type="text" size="small" v-if="scope.row.auditStatus === 1&scope.row.status === -1?true:false">上架</el-button>
-              <el-button type="text" size="small" v-if="scope.row.auditStatus === 1&scope.row.status === 1?true:false">下架</el-button>
+              <el-button @click="auditInformation(scope.row)" type="text" v-if="scope.row.auditStatus === 0?true:false" size="small">审核</el-button>
+              <el-button @click="findAuditRes(scope.row)" type="text" v-if="scope.row.auditStatus === -1?true:false" size="small">查看原因</el-button>
+              <el-button @click="editInformation(scope.row)" type="text" size="small" v-if="scope.row.auditStatus === 0?true:false">编辑</el-button>
+              <el-button @click="editInformation(scope.row)" type="text" size="small" v-if="scope.row.auditStatus === -1?true:false">重新编辑</el-button>
+              <el-button @click="editInformationStatus(scope.row)" type="text" size="small" v-if="scope.row.auditStatus === 1&scope.row.status === -1?true:false">上架</el-button>
+              <el-button @click="editInformationStatus(scope.row)" type="text" size="small" v-if="scope.row.auditStatus === 1&scope.row.status === 1?true:false">下架</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -58,19 +58,22 @@
         </el-pagination>
       </div>
       <AddInformation v-if="addInformationVisible" ref="AddInformation"></AddInformation>
+      <EditInformation v-if="editInformationVisible" ref="EditInformation"></EditInformation>
       <AuditInformation v-if="auditInformationVisible" ref="AuditInformation"></AuditInformation>
   </div>
 </template>
 <script>
-import { findAllInformation, findPartInformation } from '../../api/menu2/api'
+import { findAllInformation, findPartInformation, updateInformationStatus, findAuditResByInformationId } from '../../api/menu2/api'
 import AddInformation from '../../components/menu2/addInformation'
 import AuditInformation from '../../components/menu2/auditInformation'
+import EditInformation from '../../components/menu2/editInformation'
 export default {
-  components: { AddInformation, AuditInformation },
+  components: { AddInformation, AuditInformation, EditInformation },
   data () {
     return {
       tableData: [],
       addInformationVisible: false,
+      editInformationVisible: false,
       auditInformationVisible: false,
       currentPage: 1,
       pageSize: 30,
@@ -132,8 +135,23 @@ export default {
         this.$refs.AuditInformation.init(row)
       })
     },
-    handleClick (row) {
-      console.log(row)
+    findAuditRes (row) {
+      findAuditResByInformationId({id: row.id}).then(res => {
+        this.$alert(res.data.data.content, '审核结果', {
+          confirmButtonText: '确定'
+        })
+      })
+    },
+    editInformation (row) {
+      this.editInformationVisible = true
+      this.$nextTick(() => {
+        this.$refs.EditInformation.init(row)
+      })
+    },
+    async editInformationStatus (row) {
+      row.status = -row.status
+      await updateInformationStatus(row)
+      this.findAllInformation()
     },
     handleSizeChange (val) {
       this.pageSize = val

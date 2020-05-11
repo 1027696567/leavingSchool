@@ -30,3 +30,35 @@ export function findInformation (data) {
     params: data
   })
 }
+
+export function auditInformation (data) {
+  return http({
+    url: '/sys/auditRes',
+    method: 'post',
+    data: data
+  })
+}
+
+export function updateInformation (data) {
+  return http({
+    url: '/sys/information',
+    method: 'put',
+    data: data
+  })
+}
+
+export function updateInformationStatus (data) {
+  return http({
+    url: '/sys/informationStatus',
+    method: 'put',
+    data: data
+  })
+}
+
+export function findAuditResByInformationId (data) {
+  return http({
+    url: '/sys/auditRes',
+    method: 'get',
+    params: data
+  })
+}
