@@ -76,7 +76,7 @@ export default {
       editInformationVisible: false,
       auditInformationVisible: false,
       currentPage: 1,
-      pageSize: 30,
+      pageSize: 15,
       currentTotal: 100,
       status: 2,
       auditStatus: 2,

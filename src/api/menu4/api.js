@@ -7,3 +7,19 @@ export function findStuCardByUsername (data) {
     params: data
   })
 }
+
+export function updateStuCardInfo (data) {
+  return http({
+    url: '/audit/stuCardInfo',
+    method: 'put',
+    data: data
+  })
+}
+
+export function findByCondition (data) {
+  return http({
+    url: '/audit/stuCardInfoList',
+    method: 'get',
+    params: data
+  })
+}

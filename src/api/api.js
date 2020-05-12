@@ -11,7 +11,7 @@ const api = {
 }
 export function register (data) {
   return http({
-    url: '/register',
+    url: '/user/register',
     method: 'post',
     data: data
   })

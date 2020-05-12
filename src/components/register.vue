@@ -92,17 +92,10 @@ export default {
     onSubmit (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          register(this.userForm).then((res) => {
-            if (res.data === 1) {
-              this.$refs[formName].resetFields()
-              this.dialogVisible = false
-              this.$message.success('注册成功')
-            } else {
-              this.$message.error('账号已存在')
-            }
-          }).catch((err) => {
-            this.$message.error(err)
-          })
+          register(this.userForm).then()
+            .catch((err) => {
+              this.$message.error(err)
+            })
         } else {
           return false
         }

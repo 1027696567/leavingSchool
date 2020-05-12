@@ -1,61 +1,156 @@
 <template>
-    <div class="menu1_item1">
-    <!-- 供应商管理 -->
+  <div class="secondCollege">
       <div class="topHead">
-        <div class="buttonList">
-          <el-button @click="addInfo">审核</el-button>
-          <el-button @click="editInfo">查看</el-button>
-          <el-button @click="verifyInfo" type="primary">审核</el-button>
-          <el-button @click="deleteInfo" type="danger" disabled>删除</el-button>
-        </div>
+          <el-button @click="auditStuCards">批量审核</el-button>
+          <div class="search">
+              <div class="chunk">
+                  <label class="el-form-item__label">学号</label>
+                  <el-input v-model="stuId" placeholder="请输入学号"></el-input>
+              </div>
+              <div class="chunk">
+                  <label class="el-form-item__label">证件状态</label>
+                  <el-select v-model="status" placeholder="请选择">
+                      <el-option v-for="item in statusOptions" :key="item.value" :label="item.label" :value="item.value" :disabled="item.disabled"></el-option>
+                  </el-select>
+              </div>
+              <div class="chunk">
+                  <label class="el-form-item__label">审核状态</label>
+                  <el-select v-model="auditStatus" placeholder="请选择">
+                      <el-option v-for="item in auditStatusOptions" :key="item.value" :label="item.label" :value="item.value" :disabled="item.disabled"></el-option>
+                  </el-select>
+              </div>
+              <el-button @click="handleBtnQuery" type="primary">查询</el-button>
+          </div>
       </div>
       <el-main>
-        <el-table strip border ref="singleTable" :data="tableData" highlight-current-row @current-change="handleCurrentChange" style="width: 100%">
-          <el-table-column type="index" width="50"></el-table-column>
-          <el-table-column label="机构代码" width="180" show-overflow-tooltip>
+        <el-table :data="tableData.slice((currentPage-1)*pageSize,currentPage*pageSize)">
+          <el-table-column prop="id" label="ID" width="50">
+          </el-table-column>
+          <el-table-column prop="name" label="姓名" width="100">
+          </el-table-column>
+          <el-table-column prop="stuId" label="学号" width="100">
+          </el-table-column>
+          <el-table-column prop="identityId" label="证件号码" width="150">
+          </el-table-column>
+          <el-table-column prop="issueDate" label="发证日期" width="120">
+          </el-table-column>
+          <el-table-column prop="deptName" label="院系" width="120">
+          </el-table-column>
+          <el-table-column prop="professionName" label="专业" width="150">
+          </el-table-column>
+          <el-table-column prop="cancelStatus" label="状态" width="120">
+          </el-table-column>
+          <el-table-column label="操作">
             <template slot-scope="scope">
-              <el-button @click="companyDetail(scope.row)" type="text" style="text-decoration:underline" >{{ scope.row.companyNumber }}</el-button>
+              <el-button @click="auditInformation(scope.row)" type="text" :disabled="scope.row.status !== 1?true:false" size="small">审核</el-button>
             </template>
           </el-table-column>
-          <el-table-column property="companyName" label="机构名称" width="180"></el-table-column>
-          <el-table-column property="contact" label="联系人" width="180"></el-table-column>
-          <el-table-column property="telephone" label="联系电话" width="180"></el-table-column>
-          <el-table-column property="email" label="E-mail" width="180"></el-table-column>
-          <el-table-column property="createUserName" label="创建人" width="180"></el-table-column>
-          <el-table-column property="createTime" label="创建时间" width="180"></el-table-column>
-          <el-table-column property="statusName" label="状态" width="180"></el-table-column>
-          <el-table-column property="textarea" label="备注"></el-table-column>
         </el-table>
       </el-main>
-    </div>
+      <div class="block">
+        <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="currentPage"
+          :page-sizes="[15, 30, 50, 100]"
+          :page-size="pageSize"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="currentTotal">
+        </el-pagination>
+      </div>
+      <AddInformation v-if="addInformationVisible" ref="AddInformation"></AddInformation>
+  </div>
 </template>
-
 <script>
+import { findByCondition } from '../../api/menu4/api'
+import AddInformation from '../../components/menu2/addInformation'
 export default {
+  components: { AddInformation },
   data () {
     return {
       tableData: [],
-      currentRow: null
+      addInformationVisible: false,
+      currentPage: 1,
+      pageSize: 15,
+      currentTotal: null,
+      stuId: '',
+      classId: '',
+      statusOptions: [{
+        value: 2,
+        label: '全部'
+      }, {
+        value: 1,
+        label: '已上架'
+      }, {
+        value: -1,
+        label: '未上架'
+      }],
+      auditStatusOptions: [{
+        value: 2,
+        label: '全部'
+      }, {
+        value: 0,
+        label: '待审核'
+      }, {
+        value: 1,
+        label: '审核通过'
+      }, {
+        value: -1,
+        label: '审核不通过'
+      }]
     }
   },
   methods: {
-    setCurrent (row) {
-      this.$refs.singleTable.setCurrentRow(row)
+    handleBtnQuery () {
+      findByCondition({status: 1, stuId: this.stuId, classId: this.classId}).then(res => {
+        this.tableData = res.data.data
+        this.currentTotal = this.tableData.length
+      }).catch(err => {
+        console.log(err)
+      })
+    },
+    auditStuCards () {
+
+    },
+    findAllStuCard () {
+      findByCondition({status: '', stuId: '', classId: ''}).then(res => {
+        this.tableData = res.data.data
+        this.currentTotal = this.tableData.length
+      }).catch(err => {
+        console.log(err)
+      })
+    },
+    auditInformation (row) {
+      this.auditInformationVisible = true
+      this.$nextTick(() => {
+        this.$refs.AuditInformation.init(row)
+      })
+    },
+    editInformation (row) {
+      this.editInformationVisible = true
+      this.$nextTick(() => {
+        this.$refs.EditInformation.init(row)
+      })
+    },
+    handleSizeChange (val) {
+      this.pageSize = val
+      console.log(`每页 ${val} 条`)
     },
     handleCurrentChange (val) {
-      this.currentRow = val
+      this.currentPage = val
+      console.log(`当前页: ${val}`)
     }
   },
   created () {
+    this.findAllStuCard()
   }
 }
 </script>
-
 <style>
-  .topHead{
+  .secondCollege .topHead{
     width:100%;
     height:32px;
-    padding:0 20px 0 20px;
+    padding:0 10px 0 10px;
     box-sizing: border-box;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
@@ -63,8 +158,48 @@ export default {
     -ms-box-sizing: border-box;
     overflow: hidden;
   }
-  .buttonList{
-    float:left
+  .secondCollege .topHead .el-button{
+    float: left;
   }
-
+  .secondCollege .chunk{
+    float: left;
+  }
+  .secondCollege .topHead .el-option{
+    float: left;
+  }
+  .secondCollege .topHead .search{
+    float: right;
+  }
+  .secondCollege .topHead .el-form-item__label{
+    float: left;
+    width: 85px;
+    height: 32px;
+    text-align: center;
+    padding: 0;
+    line-height: 2.3;
+  }
+  .secondCollege .topHead .el-input{
+    -webkit-appearance: none;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    display: inline-block;
+    font-size: 14px;
+    height: 32px;
+    line-height: 32px;
+    outline: none;
+    padding: 0px;
+    -webkit-transition: border-color .2s cubic-bezier(.645,.045,.355,1);
+    transition: border-color .2s cubic-bezier(.645,.045,.355,1);
+    width: 150px;
+    float: left;
+  }
+  .secondCollege .topHead .search .el-button{
+    width: 73px;
+    height: 32px;
+    margin-left: 20px;
+    float: right;
+  }
+  .secondCollege .el-pagination{
+    float: right;
+  }
 </style>
