@@ -23,3 +23,11 @@ export function findByCondition (data) {
     params: data
   })
 }
+
+export function updateDeptAuditRes (data) {
+  return http({
+    url: '/audit/deptAuditRes',
+    method: 'post',
+    data: data
+  })
+}

@@ -3,23 +3,25 @@
         <el-table :data="tableData">
           <el-table-column prop="id" label="ID" width="50">
           </el-table-column>
-          <el-table-column prop="name" label="姓名" width="100">
+          <el-table-column prop="name" label="姓名" width="120">
           </el-table-column>
-          <el-table-column prop="stuId" label="学号" width="100">
+          <el-table-column prop="stuId" label="学号" width="120">
           </el-table-column>
-          <el-table-column prop="identityId" label="证件号码" width="150">
+          <el-table-column prop="identityId" label="证件号码" width="200">
           </el-table-column>
-          <el-table-column prop="issueDate" label="发证日期" width="120">
-          </el-table-column>
-          <el-table-column prop="deptName" label="院系" width="120">
-          </el-table-column>
-          <el-table-column prop="professionName" label="专业" width="150">
+          <el-table-column prop="issueDate" label="发证日期" width="150">
           </el-table-column>
           <el-table-column prop="cancelStatus" label="状态" width="120">
           </el-table-column>
+          <el-table-column prop="auditStatusName" label="审核状态" width="120">
+          </el-table-column>
           <el-table-column label="操作">
             <template slot-scope="scope">
-              <el-button @click="cancelStuCard(scope.row)" type="text" :disabled="scope.row.status !== 0?true:false" size="small">{{ name }}</el-button>
+              <el-button @click="cancelStuCard(scope.row)" type="text" v-if="scope.row.status === 0?true:false" size="small">申请注销</el-button>
+              <el-button type="text" v-if="scope.row.status === 1?true:false" size="small">等待注销</el-button>
+              <el-button type="text" v-if="scope.row.status === -1?true:false" size="small">注销成功</el-button>
+              <el-button type="text" size="small" v-if="scope.row.deptAuditResStatus === 0?true:false">等待审核</el-button>
+              <el-button @click="findSCAuditRes(scope.row)" type="text" size="small" v-if="scope.row.deptAuditResStatus === -1?true:false">查看原因</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -30,8 +32,7 @@ import { findStuCardByUsername, updateStuCardInfo } from '../../api/menu4/api'
 export default {
   data () {
     return {
-      tableData: [],
-      name: '申请注销'
+      tableData: []
     }
   },
   methods: {
@@ -52,10 +53,6 @@ export default {
           row.status = 1
           await updateStuCardInfo(row)
           this.findStuCardByUsername()
-          this.$message({
-            type: 'success',
-            message: '已提交申请'
-          })
         }).catch(() => {
           this.$message({
             type: 'info',
@@ -67,6 +64,11 @@ export default {
           confirmButtonText: '确定'
         })
       }
+    },
+    findSCAuditRes (row) {
+      this.$alert(row.deptAuditResContent, '审核意见', {
+        confirmButtonText: '确定'
+      })
     }
   },
   created () {
