@@ -22,7 +22,7 @@
           </el-table-column>
           <el-table-column prop="stuId" label="学号" width="100">
           </el-table-column>
-          <el-table-column prop="passDate" label="转送日期" width="150">
+          <el-table-column prop="translatePassTime" label="转送日期" width="150">
           </el-table-column>
           <el-table-column prop="place" label="转送地点" width="120">
           </el-table-column>

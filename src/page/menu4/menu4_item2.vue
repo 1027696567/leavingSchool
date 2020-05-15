@@ -9,7 +9,7 @@
           </el-table-column>
           <el-table-column prop="identityId" label="证件号码" width="200">
           </el-table-column>
-          <el-table-column prop="issueDate" label="发证日期" width="150">
+          <el-table-column prop="translateIssueDate" label="发证日期" width="150">
           </el-table-column>
           <el-table-column prop="cancelStatus" label="状态" width="120">
           </el-table-column>

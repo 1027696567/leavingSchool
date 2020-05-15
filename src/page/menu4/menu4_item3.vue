@@ -24,7 +24,7 @@
           </el-table-column>
           <el-table-column prop="identityId" label="证件号码" width="150">
           </el-table-column>
-          <el-table-column prop="issueDate" label="发证日期" width="120">
+          <el-table-column prop="translateIssueDate" label="发证日期" width="120">
           </el-table-column>
           <el-table-column prop="deptName" label="院系" width="120">
           </el-table-column>
