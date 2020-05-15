@@ -21,6 +21,7 @@
               <el-button type="text" v-if="scope.row.status === 1?true:false" size="small">等待注销</el-button>
               <el-button type="text" v-if="scope.row.status === -1?true:false" size="small">注销成功</el-button>
               <el-button type="text" size="small" v-if="scope.row.deptAuditResStatus === 0?true:false">等待审核</el-button>
+              <el-button type="text" size="small" v-if="scope.row.deptAuditResStatus === 1?true:false">审核通过</el-button>
               <el-button @click="findSCAuditRes(scope.row)" type="text" size="small" v-if="scope.row.deptAuditResStatus === -1?true:false">查看原因</el-button>
             </template>
           </el-table-column>

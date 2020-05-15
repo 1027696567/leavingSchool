@@ -117,7 +117,6 @@ export default {
       })
     },
     deptAudit (row) {
-      console.log(row)
       this.deptAuditVisible = true
       this.$nextTick(() => {
         this.$refs.DeptAudit.init(row)
