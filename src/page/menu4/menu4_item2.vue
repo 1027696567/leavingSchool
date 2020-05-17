@@ -11,7 +11,7 @@
           </el-table-column>
           <el-table-column prop="translateIssueDate" label="发证日期" width="150">
           </el-table-column>
-          <el-table-column prop="cancelStatus" label="状态" width="120">
+          <el-table-column prop="cancelStatus" label="证件状态" width="120">
           </el-table-column>
           <el-table-column prop="auditStatusName" label="审核状态" width="120">
           </el-table-column>

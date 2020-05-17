@@ -85,6 +85,7 @@ export default {
       }).then(async () => {
         row.status = -1
         row.createUser = localStorage.getItem('user')
+        console.log(row)
         await updateStuCardInfo(row)
         this.findAllStuCard()
       }).catch(() => {
