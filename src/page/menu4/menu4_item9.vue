@@ -34,7 +34,7 @@
           </el-table-column>
           <el-table-column label="操作">
             <template slot-scope="scope">
-              <el-button @click="auditMemberCard(scope.row)" type="text" size="small">同意转送</el-button>
+              <el-button @click="auditMemberCard(scope.row)" type="text" size="small">同意注销</el-button>
             </template>
           </el-table-column>
         </el-table>

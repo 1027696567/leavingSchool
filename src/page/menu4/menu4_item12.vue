@@ -1,5 +1,5 @@
 <template>
-  <div class="secondCollegeDept">
+  <div class="LibraryCardDept">
       <div class="topHead">
           <el-button @click="auditStuCards">批量审核</el-button>
           <div class="search">
@@ -24,7 +24,7 @@
           </el-table-column>
           <el-table-column prop="identityId" label="证件号码" width="150">
           </el-table-column>
-          <el-table-column prop="issueDate" label="发证日期" width="120">
+          <el-table-column prop="translateIssueDate" label="发证日期" width="120">
           </el-table-column>
           <el-table-column prop="deptName" label="院系" width="120">
           </el-table-column>
@@ -34,7 +34,7 @@
           </el-table-column>
           <el-table-column label="操作">
             <template slot-scope="scope">
-              <el-button @click="auditInformation(scope.row)" type="text" :disabled="scope.row.status !== 1?true:false" size="small">审核</el-button>
+              <el-button @click="auditLibraryCard(scope.row)" type="text" size="small">同意注销</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -50,18 +50,14 @@
           :total="currentTotal">
         </el-pagination>
       </div>
-      <AddInformation v-if="addInformationVisible" ref="AddInformation"></AddInformation>
   </div>
 </template>
 <script>
-import { findByCondition } from '../../api/menu4/api'
-import AddInformation from '../../components/menu2/addInformation'
+import { findByCondition, updateLibraryCardInfo } from '../../api/menu4/libraryCard'
 export default {
-  components: { AddInformation },
   data () {
     return {
       tableData: [],
-      addInformationVisible: false,
       currentPage: 1,
       pageSize: 15,
       currentTotal: null,
@@ -71,7 +67,7 @@ export default {
   },
   methods: {
     handleBtnQuery () {
-      findByCondition({status: 1, stuId: this.stuId, classId: this.classId}).then(res => {
+      findByCondition({status: 1, stuId: this.stuId, classId: this.classId, libraryCardAuditResStatus: ''}).then(res => {
         this.tableData = res.data.data
         this.currentTotal = this.tableData.length
       }).catch(err => {
@@ -81,24 +77,29 @@ export default {
     auditStuCards () {
 
     },
-    findAllStuCard () {
-      findByCondition({status: 1, stuId: '', classId: ''}).then(res => {
+    auditLibraryCard (row) {
+      this.$confirm('确认注销借书证？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(async () => {
+        row.status = -1
+        row.createUser = localStorage.getItem('user')
+        await updateLibraryCardInfo(row)
+        this.findAllLibraryCard()
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消'
+        })
+      })
+    },
+    findAllLibraryCard () {
+      findByCondition({status: 1, stuId: '', classId: '', libraryCardAuditResStatus: ''}).then(res => {
         this.tableData = res.data.data
         this.currentTotal = this.tableData.length
       }).catch(err => {
         console.log(err)
-      })
-    },
-    auditInformation (row) {
-      this.auditInformationVisible = true
-      this.$nextTick(() => {
-        this.$refs.AuditInformation.init(row)
-      })
-    },
-    editInformation (row) {
-      this.editInformationVisible = true
-      this.$nextTick(() => {
-        this.$refs.EditInformation.init(row)
       })
     },
     handleSizeChange (val) {
@@ -111,12 +112,12 @@ export default {
     }
   },
   created () {
-    this.findAllStuCard()
+    this.findAllLibraryCard()
   }
 }
 </script>
 <style>
-  .secondCollegeDept .topHead{
+  .LibraryCardDept .topHead{
     width:100%;
     height:32px;
     padding:0 10px 0 10px;
@@ -127,19 +128,19 @@ export default {
     -ms-box-sizing: border-box;
     overflow: hidden;
   }
-  .secondCollegeDept .topHead .el-button{
+  .LibraryCardDept .topHead .el-button{
     float: left;
   }
-  .secondCollegeDept .chunk{
+  .LibraryCardDept .chunk{
     float: left;
   }
-  .secondCollegeDept .topHead .el-option{
+  .LibraryCardDept .topHead .el-option{
     float: left;
   }
-  .secondCollegeDept .topHead .search{
+  .LibraryCardDept .topHead .search{
     float: right;
   }
-  .secondCollegeDept .topHead .el-form-item__label{
+  .LibraryCardDept .topHead .el-form-item__label{
     float: left;
     width: 85px;
     height: 32px;
@@ -147,7 +148,7 @@ export default {
     padding: 0;
     line-height: 2.3;
   }
-  .secondCollegeDept .topHead .el-input{
+  .LibraryCardDept .topHead .el-input{
     -webkit-appearance: none;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
@@ -162,13 +163,13 @@ export default {
     width: 150px;
     float: left;
   }
-  .secondCollegeDept .topHead .search .el-button{
+  .LibraryCardDept .topHead .search .el-button{
     width: 73px;
     height: 32px;
     margin-left: 20px;
     float: right;
   }
-  .secondCollegeDept .el-pagination{
+  .LibraryCardDept .el-pagination{
     float: right;
   }
 </style>

@@ -87,10 +87,10 @@ export default {
         label: '正常'
       }, {
         value: 1,
-        label: '申请转送'
+        label: '待注销'
       }, {
         value: -1,
-        label: '同意转送'
+        label: '已注销'
       }],
       auditStatusOptions: [{
         value: '',

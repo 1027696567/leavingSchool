@@ -1,42 +1,44 @@
 <template>
-  <div class="secondCollegeStu">
+  <div class="LibraryCardStu">
         <el-table :data="tableData">
           <el-table-column prop="id" label="ID" width="50">
           </el-table-column>
-          <el-table-column prop="name" label="姓名" width="100">
+          <el-table-column prop="name" label="姓名" width="120">
           </el-table-column>
-          <el-table-column prop="stuId" label="学号" width="100">
+          <el-table-column prop="stuId" label="学号" width="120">
           </el-table-column>
-          <el-table-column prop="identityId" label="证件号码" width="150">
+          <el-table-column prop="identityId" label="证件号码" width="200">
           </el-table-column>
-          <el-table-column prop="issueDate" label="发证日期" width="120">
+          <el-table-column prop="translateIssueDate" label="发证日期" width="150">
           </el-table-column>
-          <el-table-column prop="deptName" label="院系" width="120">
+          <el-table-column prop="cancelStatus" label="证件状态" width="120">
           </el-table-column>
-          <el-table-column prop="professionName" label="专业" width="150">
-          </el-table-column>
-          <el-table-column prop="cancelStatus" label="状态" width="120">
+          <el-table-column prop="auditStatusName" label="审核状态" width="120">
           </el-table-column>
           <el-table-column label="操作">
             <template slot-scope="scope">
-              <el-button @click="cancelStuCard(scope.row)" type="text" :disabled="scope.row.status !== 0?true:false" size="small">{{ name }}</el-button>
+              <el-button @click="cancelStuCard(scope.row)" type="text" v-if="scope.row.status === 0?true:false" size="small">申请注销</el-button>
+              <el-button type="text" v-if="scope.row.status === 1?true:false" size="small">等待注销</el-button>
+              <el-button type="text" v-if="scope.row.status === -1?true:false" size="small">注销成功</el-button>
+              <el-button type="text" size="small" v-if="scope.row.libraryCardAuditResStatus === 0?true:false">等待审核</el-button>
+              <el-button type="text" v-if="scope.row.libraryCardAuditResStatus === 1?true:false" size="small">审核通过</el-button>
+              <el-button @click="findSCAuditRes(scope.row)" type="text" size="small" v-if="scope.row.libraryCardAuditResStatus === -1?true:false">查看原因</el-button>
             </template>
           </el-table-column>
         </el-table>
   </div>
 </template>
 <script>
-import { findStuCardByUsername, updateStuCardInfo } from '../../api/menu4/api'
+import { findLibraryCardByUsername, updateLibraryCardInfo } from '../../api/menu4/libraryCard'
 export default {
   data () {
     return {
-      tableData: [],
-      name: '申请注销'
+      tableData: []
     }
   },
   methods: {
-    findStuCardByUsername () {
-      findStuCardByUsername({user: localStorage.getItem('user')}).then(res => {
+    findLibraryCardByUsername () {
+      findLibraryCardByUsername({user: localStorage.getItem('user')}).then(res => {
         this.tableData = res.data.data
       }).catch(err => {
         console.log(err)
@@ -44,18 +46,14 @@ export default {
     },
     cancelStuCard (row) {
       if (row.status === 0) {
-        this.$confirm('确认注销学生证？', '提示', {
+        this.$confirm('确认注销借书证？', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(async () => {
           row.status = 1
-          await updateStuCardInfo(row)
-          this.findStuCardByUsername()
-          this.$message({
-            type: 'success',
-            message: '已提交申请'
-          })
+          await updateLibraryCardInfo(row)
+          this.findLibraryCardByUsername()
         }).catch(() => {
           this.$message({
             type: 'info',
@@ -67,10 +65,15 @@ export default {
           confirmButtonText: '确定'
         })
       }
+    },
+    findSCAuditRes (row) {
+      this.$alert(row.libraryCardAuditResContent, '审核意见', {
+        confirmButtonText: '确定'
+      })
     }
   },
   created () {
-    this.findStuCardByUsername()
+    this.findLibraryCardByUsername()
   }
 }
 </script>
