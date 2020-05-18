@@ -1,7 +1,7 @@
 <template>
-  <div class="secondCollege">
+  <div class="Education">
       <div class="topHead">
-          <el-button @click="auditStuCards">批量审核</el-button>
+          <el-button>批量审核</el-button>
           <div class="search">
               <div class="chunk">
                   <label class="el-form-item__label">学号</label>
@@ -15,7 +15,7 @@
               </div>
               <div class="chunk">
                   <label class="el-form-item__label">审核状态</label>
-                  <el-select v-model="auditStatus" placeholder="请选择">
+                  <el-select v-model="libraryCardAuditResStatus" placeholder="请选择">
                       <el-option v-for="item in auditStatusOptions" :key="item.value" :label="item.label" :value="item.value" :disabled="item.disabled"></el-option>
                   </el-select>
               </div>
@@ -26,23 +26,25 @@
         <el-table :data="tableData.slice((currentPage-1)*pageSize,currentPage*pageSize)">
           <el-table-column prop="id" label="ID" width="50">
           </el-table-column>
-          <el-table-column prop="name" label="姓名" width="100">
+          <el-table-column prop="name" label="姓名" width="80">
           </el-table-column>
-          <el-table-column prop="stuId" label="学号" width="100">
+          <el-table-column prop="stuId" label="学号" width="80">
           </el-table-column>
           <el-table-column prop="identityId" label="证件号码" width="150">
           </el-table-column>
-          <el-table-column prop="issueDate" label="发证日期" width="120">
-          </el-table-column>
           <el-table-column prop="deptName" label="院系" width="120">
           </el-table-column>
-          <el-table-column prop="professionName" label="专业" width="150">
+          <el-table-column prop="professionName" label="专业" width="120">
           </el-table-column>
-          <el-table-column prop="cancelStatus" label="状态" width="120">
+          <el-table-column prop="cancelStatus" label="证件状态" width="120">
+          </el-table-column>
+          <el-table-column prop="auditStatusName" label="审核状态" width="100">
           </el-table-column>
           <el-table-column label="操作">
             <template slot-scope="scope">
-              <el-button @click="auditInformation(scope.row)" type="text" :disabled="scope.row.status !== 1?true:false" size="small">审核</el-button>
+              <el-button @click="deptAudit(scope.row)" type="text" v-if="scope.row.libraryCardAuditResStatus === 0||scope.row.libraryCardAuditResStatus === null?true:false" size="small">审核</el-button>
+              <el-button type="text" v-if="scope.row.libraryCardAuditResStatus === 1?true:false" size="small">审核通过</el-button>
+              <el-button @click="deptAudit(scope.row)" type="text" v-if="scope.row.libraryCardAuditResStatus === -1?true:false" size="small">重新审核</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -58,35 +60,40 @@
           :total="currentTotal">
         </el-pagination>
       </div>
-      <AddInformation v-if="addInformationVisible" ref="AddInformation"></AddInformation>
+      <LibraryCard v-if="libraryCardVisible" ref="LibraryCard"></LibraryCard>
   </div>
 </template>
 <script>
-import { findByCondition } from '../../api/menu4/api'
-import AddInformation from '../../components/menu2/addInformation'
+import { findByCondition } from '../../api/menu4/libraryCard'
+import LibraryCard from '../../components/menu4/libraryCard'
 export default {
-  components: { AddInformation },
+  components: { LibraryCard },
   data () {
     return {
       tableData: [],
-      addInformationVisible: false,
       currentPage: 1,
       pageSize: 15,
       currentTotal: null,
       stuId: '',
       classId: '',
+      libraryCardVisible: false,
+      libraryCardAuditResStatus: '',
+      status: '',
       statusOptions: [{
-        value: 2,
+        value: '',
         label: '全部'
       }, {
+        value: 0,
+        label: '正常'
+      }, {
         value: 1,
-        label: '已上架'
+        label: '待注销'
       }, {
         value: -1,
-        label: '未上架'
+        label: '已注销'
       }],
       auditStatusOptions: [{
-        value: 2,
+        value: '',
         label: '全部'
       }, {
         value: 0,
@@ -102,34 +109,25 @@ export default {
   },
   methods: {
     handleBtnQuery () {
-      findByCondition({status: 1, stuId: this.stuId, classId: this.classId}).then(res => {
+      findByCondition({status: this.status, stuId: this.stuId, classId: this.classId, libraryCardAuditResStatus: this.libraryCardAuditResStatus}).then(res => {
         this.tableData = res.data.data
         this.currentTotal = this.tableData.length
       }).catch(err => {
         console.log(err)
       })
     },
-    auditStuCards () {
-
+    deptAudit (row) {
+      this.libraryCardVisible = true
+      this.$nextTick(() => {
+        this.$refs.LibraryCard.init(row)
+      })
     },
-    findAllStuCard () {
-      findByCondition({status: '', stuId: '', classId: ''}).then(res => {
+    findAllLibraryCard () {
+      findByCondition({status: '', stuId: '', classId: '', libraryCardAuditResStatus: ''}).then(res => {
         this.tableData = res.data.data
         this.currentTotal = this.tableData.length
       }).catch(err => {
         console.log(err)
-      })
-    },
-    auditInformation (row) {
-      this.auditInformationVisible = true
-      this.$nextTick(() => {
-        this.$refs.AuditInformation.init(row)
-      })
-    },
-    editInformation (row) {
-      this.editInformationVisible = true
-      this.$nextTick(() => {
-        this.$refs.EditInformation.init(row)
       })
     },
     handleSizeChange (val) {
@@ -142,12 +140,12 @@ export default {
     }
   },
   created () {
-    this.findAllStuCard()
+    this.findAllLibraryCard()
   }
 }
 </script>
 <style>
-  .secondCollege .topHead{
+  .Education .topHead{
     width:100%;
     height:32px;
     padding:0 10px 0 10px;
@@ -158,19 +156,19 @@ export default {
     -ms-box-sizing: border-box;
     overflow: hidden;
   }
-  .secondCollege .topHead .el-button{
+  .Education .topHead .el-button{
     float: left;
   }
-  .secondCollege .chunk{
+  .Education .chunk{
     float: left;
   }
-  .secondCollege .topHead .el-option{
+  .Education .topHead .el-option{
     float: left;
   }
-  .secondCollege .topHead .search{
+  .Education .topHead .search{
     float: right;
   }
-  .secondCollege .topHead .el-form-item__label{
+  .Education .topHead .el-form-item__label{
     float: left;
     width: 85px;
     height: 32px;
@@ -178,7 +176,7 @@ export default {
     padding: 0;
     line-height: 2.3;
   }
-  .secondCollege .topHead .el-input{
+  .Education .topHead .el-input{
     -webkit-appearance: none;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
@@ -193,13 +191,13 @@ export default {
     width: 150px;
     float: left;
   }
-  .secondCollege .topHead .search .el-button{
+  .Education .topHead .search .el-button{
     width: 73px;
     height: 32px;
     margin-left: 20px;
     float: right;
   }
-  .secondCollege .el-pagination{
+  .Education .el-pagination{
     float: right;
   }
 </style>
