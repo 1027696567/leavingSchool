@@ -28,7 +28,7 @@
           </el-table-column>
           <el-table-column prop="name" label="姓名" width="80">
           </el-table-column>
-          <el-table-column prop="stuId" label="学号" width="80">
+          <el-table-column prop="stuId" label="学号" width="100">
           </el-table-column>
           <el-table-column prop="translatePassTime" label="转送日期" width="120">
           </el-table-column>

@@ -28,13 +28,13 @@
           </el-table-column>
           <el-table-column prop="name" label="姓名" width="80">
           </el-table-column>
-          <el-table-column prop="stuId" label="学号" width="80">
+          <el-table-column prop="stuId" label="学号" width="100">
           </el-table-column>
           <el-table-column prop="identityId" label="证件号码" width="150">
           </el-table-column>
-          <el-table-column prop="deptName" label="院系" width="120">
+          <el-table-column prop="deptName" label="院系" width="150">
           </el-table-column>
-          <el-table-column prop="professionName" label="专业" width="120">
+          <el-table-column prop="professionName" label="专业" width="150">
           </el-table-column>
           <el-table-column prop="cancelStatus" label="证件状态" width="120">
           </el-table-column>

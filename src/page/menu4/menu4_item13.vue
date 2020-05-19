@@ -8,14 +8,14 @@
                   <el-input v-model="stuId" placeholder="请输入学号"></el-input>
               </div>
               <div class="chunk">
-                  <label class="el-form-item__label">证件状态</label>
+                  <label class="el-form-item__label">缴费状态</label>
                   <el-select v-model="status" placeholder="请选择">
                       <el-option v-for="item in statusOptions" :key="item.value" :label="item.label" :value="item.value" :disabled="item.disabled"></el-option>
                   </el-select>
               </div>
               <div class="chunk">
                   <label class="el-form-item__label">审核状态</label>
-                  <el-select v-model="libraryCardAuditResStatus" placeholder="请选择">
+                  <el-select v-model="educationAuditResStatus" placeholder="请选择">
                       <el-option v-for="item in auditStatusOptions" :key="item.value" :label="item.label" :value="item.value" :disabled="item.disabled"></el-option>
                   </el-select>
               </div>
@@ -28,23 +28,25 @@
           </el-table-column>
           <el-table-column prop="name" label="姓名" width="80">
           </el-table-column>
-          <el-table-column prop="stuId" label="学号" width="80">
+          <el-table-column prop="stuId" label="学号" width="100">
           </el-table-column>
-          <el-table-column prop="identityId" label="证件号码" width="150">
+          <el-table-column prop="money" label="应缴金额" width="100">
           </el-table-column>
-          <el-table-column prop="deptName" label="院系" width="120">
+          <el-table-column prop="receiveMoney" label="已缴金额" width="100">
           </el-table-column>
-          <el-table-column prop="professionName" label="专业" width="120">
+          <el-table-column prop="deptName" label="院系" width="150">
           </el-table-column>
-          <el-table-column prop="cancelStatus" label="证件状态" width="120">
+          <el-table-column prop="professionName" label="专业" width="150">
+          </el-table-column>
+          <el-table-column prop="payStatus" label="缴费状态" width="100">
           </el-table-column>
           <el-table-column prop="auditStatusName" label="审核状态" width="100">
           </el-table-column>
           <el-table-column label="操作">
             <template slot-scope="scope">
-              <el-button @click="deptAudit(scope.row)" type="text" v-if="scope.row.libraryCardAuditResStatus === 0||scope.row.libraryCardAuditResStatus === null?true:false" size="small">审核</el-button>
-              <el-button type="text" v-if="scope.row.libraryCardAuditResStatus === 1?true:false" size="small">审核通过</el-button>
-              <el-button @click="deptAudit(scope.row)" type="text" v-if="scope.row.libraryCardAuditResStatus === -1?true:false" size="small">重新审核</el-button>
+              <el-button @click="deptAudit(scope.row)" type="text" v-if="scope.row.educationAuditResStatus === 0||scope.row.educationAuditResStatus === null?true:false" size="small">审核</el-button>
+              <el-button type="text" v-if="scope.row.educationAuditResStatus === 1?true:false" size="small">审核通过</el-button>
+              <el-button @click="deptAudit(scope.row)" type="text" v-if="scope.row.educationAuditResStatus === -1?true:false" size="small">重新审核</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -60,14 +62,14 @@
           :total="currentTotal">
         </el-pagination>
       </div>
-      <LibraryCard v-if="libraryCardVisible" ref="LibraryCard"></LibraryCard>
+      <Education v-if="educationVisible" ref="Education"></Education>
   </div>
 </template>
 <script>
-import { findByCondition } from '../../api/menu4/libraryCard'
-import LibraryCard from '../../components/menu4/libraryCard'
+import { findByCondition } from '../../api/menu4/education'
+import Education from '../../components/menu4/education'
 export default {
-  components: { LibraryCard },
+  components: { Education },
   data () {
     return {
       tableData: [],
@@ -76,21 +78,18 @@ export default {
       currentTotal: null,
       stuId: '',
       classId: '',
-      libraryCardVisible: false,
-      libraryCardAuditResStatus: '',
+      educationVisible: false,
+      educationAuditResStatus: '',
       status: '',
       statusOptions: [{
         value: '',
         label: '全部'
       }, {
-        value: 0,
-        label: '正常'
-      }, {
         value: 1,
-        label: '待注销'
+        label: '已缴清'
       }, {
         value: -1,
-        label: '已注销'
+        label: '未缴清'
       }],
       auditStatusOptions: [{
         value: '',
@@ -109,7 +108,7 @@ export default {
   },
   methods: {
     handleBtnQuery () {
-      findByCondition({status: this.status, stuId: this.stuId, classId: this.classId, libraryCardAuditResStatus: this.libraryCardAuditResStatus}).then(res => {
+      findByCondition({status: this.status, stuId: this.stuId, classId: this.classId, educationAuditResStatus: this.educationAuditResStatus}).then(res => {
         this.tableData = res.data.data
         this.currentTotal = this.tableData.length
       }).catch(err => {
@@ -117,13 +116,13 @@ export default {
       })
     },
     deptAudit (row) {
-      this.libraryCardVisible = true
+      this.educationVisible = true
       this.$nextTick(() => {
-        this.$refs.LibraryCard.init(row)
+        this.$refs.Education.init(row)
       })
     },
-    findAllLibraryCard () {
-      findByCondition({status: '', stuId: '', classId: '', libraryCardAuditResStatus: ''}).then(res => {
+    findAllEducation () {
+      findByCondition({status: '', stuId: '', classId: '', educationAuditResStatus: ''}).then(res => {
         this.tableData = res.data.data
         this.currentTotal = this.tableData.length
       }).catch(err => {
@@ -140,7 +139,7 @@ export default {
     }
   },
   created () {
-    this.findAllLibraryCard()
+    this.findAllEducation()
   }
 }
 </script>
