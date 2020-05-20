@@ -10,7 +10,7 @@
             <el-link :href=href+data.id  target="_blank">
               <span class="urlTitle">{{data.title}}</span>
             </el-link>
-          <span class="urlTime">{{data.updateTime}}</span>
+          <span class="urlTime">{{data.updateTimeToString}}</span>
         </p>
     </el-card>
       </el-main>

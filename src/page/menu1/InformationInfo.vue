@@ -8,7 +8,7 @@
           </div>
           <div class="body">
             <h4 class="title">{{this.information.title}}</h4>
-            <el-divider>作者：{{this.information.createUser}} — 发布时间：{{this.information.updateTime}} — 发布部门：{{this.information.name}}</el-divider>
+            <el-divider>作者：{{this.information.createUser}} — 发布时间：{{this.information.updateTimeToString}} — 发布部门：{{this.information.name}}</el-divider>
             <p style="line-height: 2em; text-indent: 2em;">
               <span style="font-family: 微软雅黑,Microsoft YaHei;">{{this.information.content}}</span>
             </p>
