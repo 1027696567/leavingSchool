@@ -28,7 +28,7 @@
           <el-link :href=href+data.id  target="_blank">
             <span class="urlTitle">{{data.title}}</span>
           </el-link>
-          <span class="urlTime">{{data.updateTime}}</span>
+          <span class="urlTime">{{data.updateTimeToString}}</span>
         </p>
     </el-card>
   </div>
@@ -94,13 +94,13 @@ export default {
   }
 
   .News .box-card {
-    width: 59%;
+    width: 55%;
     min-height: 200px;
     float: left;
   }
   .News .box-card2 {
     min-height: 200px;
-    width: 40.5%;
+    width: 44.5%;
     float: right;
   }
   .News .el-carousel .el-carousel-item{
