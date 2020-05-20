@@ -2,8 +2,8 @@
   <div class="News">
     <div class="block">
       <el-carousel height="250px">
-        <el-carousel-item v-for="item in 4" :key="item">
-          <h3 class="small">{{ item }}</h3>
+        <el-carousel-item v-for="item in imgs" :key="item.url">
+          <img class="carousel-img" :src="item.url"/>
         </el-carousel-item>
       </el-carousel>
     </div>
@@ -39,7 +39,13 @@ export default {
   data () {
     return {
       Information: null,
-      href: '/InformationInfo' + '?id='
+      href: '/InformationInfo' + '?id=',
+      imgs: [
+        {url: require('../../assets/image/lun_imgs/5dce3e51813b1.jpg'), link: '/content1'},
+        {url: require('../../assets/image/lun_imgs/5dce37766bc9a.jpg'), link: '/content1'},
+        {url: require('../../assets/image/lun_imgs/5ea61b349f390.jpg'), link: '/content1'},
+        {url: require('../../assets/image/lun_imgs/5eaa4b4a45ace.png'), link: '/content1'}
+      ]
     }
   },
   methods: {
@@ -97,20 +103,14 @@ export default {
     width: 40.5%;
     float: right;
   }
-  .News .el-carousel__item h3 {
-    color: #475669;
-    font-size: 14px;
-    opacity: 0.75;
-    line-height: 150px;
-    margin: 0;
+  .News .el-carousel .el-carousel-item{
+     background: white;
   }
-
-  .News .el-carousel__item:nth-child(2n) {
-     background-color: #99a9bf;
-  }
-
-  .News .el-carousel__item:nth-child(2n+1) {
-     background-color: #d3dce6;
+  .News .carousel-img {
+    height: 100%;
+    width: 100%;
+    max-width: 100%;
+    max-height: 100%;
   }
   .News .block{
     padding-bottom: 10px;

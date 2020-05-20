@@ -8,7 +8,7 @@
                   <el-input v-model="stuId" placeholder="请输入学号"></el-input>
               </div>
               <div class="chunk">
-                  <label class="el-form-item__label">证件状态</label>
+                  <label class="el-form-item__label">一卡通状态</label>
                   <el-select v-model="status" placeholder="请选择">
                       <el-option v-for="item in statusOptions" :key="item.value" :label="item.label" :value="item.value" :disabled="item.disabled"></el-option>
                   </el-select>
