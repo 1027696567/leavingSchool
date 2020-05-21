@@ -63,7 +63,7 @@
   </div>
 </template>
 <script>
-import { findAllInformation, findPartInformation, updateInformationStatus, findAuditResByInformationId } from '../../api/menu2/api'
+import { findAllInformation, findPartInformation, updateInformationStatus, findAuditResByInformationId, buttomAudit } from '../../api/menu2/api'
 import AddInformation from '../../components/menu2/addInformation'
 import AuditInformation from '../../components/menu2/auditInformation'
 import EditInformation from '../../components/menu2/editInformation'
@@ -130,9 +130,13 @@ export default {
       })
     },
     auditInformation (row) {
-      this.auditInformationVisible = true
-      this.$nextTick(() => {
-        this.$refs.AuditInformation.init(row)
+      buttomAudit().then(res => {
+        if (res.data.code === 200) {
+          this.auditInformationVisible = true
+          this.$nextTick(() => {
+            this.$refs.AuditInformation.init(row)
+          })
+        }
       })
     },
     findAuditRes (row) {

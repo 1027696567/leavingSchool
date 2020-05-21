@@ -62,3 +62,10 @@ export function findAuditResByInformationId (data) {
     params: data
   })
 }
+
+export function buttomAudit () {
+  return http({
+    url: '/sys/buttomAudit',
+    method: 'get'
+  })
+}
