@@ -8,7 +8,6 @@
       <el-form-item prop="password">
         <el-input type="password" v-model="user.password" auto-complete="off" placeholder="密码"></el-input>
       </el-form-item>
-      <el-button type="text" class="register" @click="register">注册账号</el-button>
       <el-button type="primary" style="width:100%; margin-left: 0px" @click="handleSubmit" :loading="logining">登录</el-button>
     </el-form>
   <Register v-if="registerVisible" ref="Register"></Register>
